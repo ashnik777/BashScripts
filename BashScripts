@@ -1,0 +1,148 @@
+#!/bin/bash
+
+changeBrightness () {
+echo "Please enter a brightness level in range 0 to 255 "
+cat >> /sys/class/backlight/amdgpu_bl0/brightness
+}
+
+
+
+
+
+
+
+change_nameserver () { 
+sed -i '/nameserver 127.0.0.53/c\nameserver 1.1.1.1' /etc/resolv.conf
+}
+
+
+
+
+
+
+
+details () {
+clear
+echo "********************************************************************************"
+echo "Your IP address"
+echo "********************************************************************************"
+hostname -I
+echo $'\n\n********************************************************************************'
+echo "Your public IP address"
+echo "********************************************************************************"
+dig +short myip.opendns.com @resolver1.opendns.com
+echo $'\n\n********************************************************************************'
+echo "Kernel IP routing table"
+echo "********************************************************************************"
+netstat -rn | tail -4
+echo $'\n\n********************************************************************************'
+echo "Your memory details in GB"
+echo "********************************************************************************"
+free -g
+echo $'\n\n********************************************************************************'
+echo "Your cpu details"
+echo "********************************************************************************"
+lscpu | head -19
+}
+
+
+
+
+
+
+site () {
+sudo systemctl start apache2
+cd /var/www/html
+sudo mv index.html _index.html
+sudo rm index.html
+cd ~/
+sudo wget rate.am
+sudo mv index.html /var/www/html
+}
+
+
+
+
+
+startDaenon () {
+echo "Enter what daemaon you want to start"
+read name
+
+
+echo -e "\nChecking status of $name ...." 
+export x=$(systemctl status $name | sed -n '3p' | cut -d " " -f7)
+if [ $x == "inactive" ]
+then
+	echo "Starting $name ...."
+	sudo systemctl start $name
+	echo "$name started !"
+else
+	echo "$name has already started !!!"
+fi
+}
+
+
+
+
+
+
+
+disableDaemon () {
+echo "Enter what daemaon you want to disable"
+read name
+
+echo -e "\nChecking if $name is disabled ...." 
+export x=$(systemctl is-enabled $name)
+if [ $x == "enabled" ]
+then
+	echo "Disabling $name ...."
+	sudo systemctl disable $name
+	echo "$name is disabled !"
+else
+	echo "$name is already disabled !!!"
+fi
+}
+
+
+
+
+
+
+
+enableDaemon () {
+echo "Enter what daemaon you want to enable"
+read name
+
+echo -e "\nChecking if $name is enabled ...." 
+export x=$(systemctl is-enabled $name)
+if [ $x == "disabled" ]
+then
+	echo "Enabling $name ...."
+	sudo systemctl enable $name
+	echo "$name is enabled !"
+else
+	echo "$name is already enabled !!!"
+fi
+}
+
+
+
+
+
+
+stomDaemon () {
+echo "Enter what daemaon you want to stop"
+read name
+
+
+echo -e "\nChecking status of $name ...." 
+export x=$(systemctl status $name | sed -n '3p' | cut -d " " -f7)
+if [ $x == "active" ]
+then
+	echo "Stoping $name ...."
+	sudo systemctl stop $name
+	echo "$name is stoped !"
+else
+	echo "$name is already stopped !!!"
+fi
+}
