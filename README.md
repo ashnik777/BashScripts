@@ -1,4 +1,4 @@
-This is the README file of matrices poject developt by Ashot Nikoghosyan
+This is the README file of bashscript poject developt by Ashot Nikoghosyan
 
 ## CONTENTS 
 
